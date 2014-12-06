@@ -5,9 +5,10 @@ import java.awt.event.ActionListener;
 
 public class PolygonWars extends JFrame 
 {
+    private static final int WIDTH = 1200, HEIGHT = 900;
+    private static final int MAX_LEVEL = 9;
     private BattleField battleField;
-    private String[] level = {"Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9"};
-    private JComboBox cbLevel = new JComboBox<>(level);
+    private JComboBox<String> cbLevel = new JComboBox<>();
     private JRadioButton rdoMouseClick;
     private JRadioButton rdoMouseMove;
     private JButton btnStartGame;
@@ -15,92 +16,61 @@ public class PolygonWars extends JFrame
     public PolygonWars()
     {
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(1, 2));
-        
-        //  sidePanel is input and output panel that contains: settings panel, missile panel and star panel
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new GridLayout(3, 1));
-        
-        //  1. Start settings panel
-        JPanel settings = new JPanel();
-        settings.setLayout(new GridLayout(2, 1));
-        
-        //  1a. Start current settings panel
-        JPanel currentSettingsPanel = new JPanel();
-        currentSettingsPanel.setLayout(new GridLayout(2, 1));
-        
-        //  Start user input panel
-        JPanel userInputPanel = new JPanel();
-        userInputPanel.setLayout(new GridLayout(1, 3));
-        
+        contentPane.setLayout(new BorderLayout());
+
         UserInputListener listener = new UserInputListener();      //  for Level combobox and StartGame button
-        
-        cbLevel.setSelectedItem(level[0]);
+
+        for (int i = 1; i <= MAX_LEVEL; i++)
+            cbLevel.addItem("Level " + i);
+
+        cbLevel.setSelectedItem(0);
         cbLevel.addActionListener(listener);
-        
-        btnStartGame = new JButton("Start Game");
-        btnStartGame.addActionListener(listener);
-        
-        //  add radio buttons to button group
-        rdoMouseClick  = new JRadioButton("Ship: Mouse-Click");
-        rdoMouseClick.setForeground(Color.BLUE);
-        rdoMouseClick.setBackground(Color.WHITE);
-        rdoMouseClick.setSelected(true);
-        rdoMouseClick.addActionListener(listener);
-        //rdoMouseMove.setMnemonic('C');
-        
-        rdoMouseMove = new JRadioButton("Ship: Mouse-Move");
-        rdoMouseMove.setForeground(Color.BLUE);
-        rdoMouseMove.setBackground(Color.WHITE);
-        rdoMouseMove.addActionListener(listener);
-        //rdoMouseMove.setMnemonic('M');
-        
-        //  mouse panel
-        JPanel mousePanel = new JPanel();
-        mousePanel.setLayout(new GridLayout(2, 1));
-        mousePanel.add(rdoMouseClick);
-        mousePanel.add(rdoMouseMove);
 
-        ButtonGroup grpMouse = new ButtonGroup();
-        grpMouse.add(rdoMouseClick);
-        grpMouse.add(rdoMouseMove);
+        //  hud is input and output panel that contains: settings panel, missile panel and star panel
+        JPanel hud = new JPanel();
+        hud.setLayout(new GridLayout(1, 4));
         
-        userInputPanel.add(cbLevel);
-        userInputPanel.add(mousePanel);
-        userInputPanel.add(btnStartGame);
-        //  End user input panel
+        //  1. select level before game start; show level after game start
+        JLabel levelLbl = new JLabel();
+        // TODO: update this text when level changes
+        levelLbl.setText("level goes here");
+        JPanel levelPnl = new JPanel();
+        levelPnl.setBackground(Color.GRAY);
+        levelPnl.add(cbLevel);
+//        levelPnl.add(levelLbl);
+        // TODO: remove combobox and replace with label once the game starts
 
-        JTextField speedScoreTextField = new JTextField();
-        speedScoreTextField.setEditable(false);
-        speedScoreTextField.setBackground(Color.MAGENTA);
+        //  2. show missile supply
+        JLabel missilesLbl = new JLabel();
+        // TODO: update this label when missiles change
+        // TODO: use a missile icon with text
+        missilesLbl.setText("missiles go here");
+        JPanel missilesPnl = new JPanel();
+        missilesPnl.setBackground(Color.YELLOW);
+        missilesPnl.add(missilesLbl);
         
-        currentSettingsPanel.add(userInputPanel);
-        
-        currentSettingsPanel.add(speedScoreTextField);
-        //  End current settings panel
-        
-        //  1b. User History text area
-        JTextField userHistoryTextField = new JTextField();
-        userHistoryTextField.setEditable(false);
-        userHistoryTextField.setBackground(Color.GRAY);
-        
-        settings.add(currentSettingsPanel);
-        settings.add(userHistoryTextField);
-        //  End settings panel
-        
-        //  2. Missile panel
-        JPanel missileInventory = new JPanel();
-        missileInventory.setBackground(Color.YELLOW);
-        
-        //  3. Star panel
-        JPanel starInventory = new JPanel();
-        starInventory.setBackground(Color.CYAN);
-        
-        sidePanel.add(settings);
-        sidePanel.add(missileInventory);
-        sidePanel.add(starInventory);
-        
-        //  Game panel
+        //  3. show stars remaining
+        JLabel starsLbl = new JLabel();
+        // TODO: update this label when stars change
+        // TODO: use a star icon with text
+        starsLbl.setText("stars go here");
+        JPanel starsPnl = new JPanel();
+        starsPnl.setBackground(Color.CYAN);
+        starsPnl.add(starsLbl);
+
+        //  4. show score
+        JLabel scoreLbl = new JLabel();
+        // TODO: update this label when score changes
+        scoreLbl.setText("score goes here");
+        JPanel scorePnl = new JPanel();
+        scorePnl.setBackground(Color.MAGENTA);
+        scorePnl.add(scoreLbl);
+
+        hud.add(levelPnl);
+        hud.add(missilesPnl);
+        hud.add(starsPnl);
+        hud.add(scorePnl);
+
 /*
         if (rdoMouseClick.isSelected())
             battleField = new BattleField(true);
@@ -108,8 +78,8 @@ public class PolygonWars extends JFrame
             battleField = new BattleField(false);
 */
 
-        contentPane.add(sidePanel);
-        contentPane.add(new BattleField());
+        contentPane.add(hud, BorderLayout.SOUTH);
+        contentPane.add(new BattleField(WIDTH, HEIGHT), BorderLayout.CENTER);
     }
     
     
@@ -141,8 +111,9 @@ public class PolygonWars extends JFrame
     }
     
     public static void main(String [] args) throws Exception {
-		PolygonWars win= new PolygonWars();
-		win.setSize(900, 660);
+		PolygonWars win = new PolygonWars();
+
+		win.setSize(WIDTH, HEIGHT);
         win.setTitle("Polygon Wars");
 		win.setVisible(true);
         win.setLocationRelativeTo(null);

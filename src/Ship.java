@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 class Ship extends Polygon
 {
@@ -9,7 +10,7 @@ class Ship extends Polygon
     private static int width = 26;
     private static int height = 50;
 
-    Point position = new Point(0, 0);
+    Point2D position = new Point2D.Double(0, 0);
     Color color = Color.WHITE;
 
     public Ship()

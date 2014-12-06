@@ -1,35 +1,47 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 class BattleField extends JPanel implements MouseMotionListener, MouseListener
 {
-    private static final int WIDTH = 500, HEIGHT = 600;
-
+    private int width, height;
     private Ship xWing = new Ship();
     private ArrayList<Star> stars = new ArrayList<>();
     private int xNew;
     private int yNew;
     private boolean blnMouseClick = false;
+    private static final int TIME_SLICE = 10;
+
+    private final Timer timer = new Timer(TIME_SLICE, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for (Star star : stars) {
+                star.move();
+            }
+            repaint();
+//            System.out.println("Star: " + stars.get(0).getPos());
+        }
+    });
 
     public void spawnStar() {
         // create a star with a random number of points between 3 and the length of the colors array
-        Star newStar = new Star((int)(Math.random()*(Star.colors.length) + 3));
-
+        Star newStar = new Star(
+                (int)(Math.random()*(Star.colors.length) + 3),
         // set the initial position of the star
-        newStar.translate((int)(Math.random() * WIDTH * .80 + WIDTH * .10), 0);
+                (int)(Math.random() * width * .80 + width * .10), 0
+        );
 
         stars.add(newStar);
 
     }
 
-    public BattleField()
+    public BattleField(int width, int height)
     {
+        this.width = width;
+        this.height = height;
 //        this.blnMouseClick = blnMouseClick;
-        this.setBackground(Color.LIGHT_GRAY);
+        this.setBackground(new Color(0x00, 0x00, 0x88));
         this.setLayout(null);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
@@ -40,6 +52,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         spawnStar();
         spawnStar();
 //        xWing.translate(225, 330);
+        timer.start();
     }
 
     public void setMouseClick(boolean theClick)
@@ -65,6 +78,8 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     @Override
     public void mouseMoved(MouseEvent e)
     {
+        // TODO: check https://github.com/ncoop/intro-java/blob/master/9e_18_36/chapter18/DisplayAngles.java
+        // for a way to keep the object responsive when the cursor moves out of frame
 //        if (!blnMouseClick)
 //        {
             xNew = e.getX();
@@ -127,10 +142,12 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     {
     }
 
+/*
     public Dimension getPreferredSize()
     {
-        return new Dimension(WIDTH, HEIGHT);
+        return new Dimension(width, height);
     }
+*/
 
     @Override
     protected void paintComponent(Graphics g)
@@ -138,14 +155,14 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         super.paintComponent(g);
 
         for (Star star : stars) {
-            g.setColor(star.color);
+            g.setColor(star.getColor());
             g.fillPolygon(star);
         }
 
         g.setColor(xWing.color);
         g.fillPolygon(xWing);
 
-        System.out.println(xWing.position);
+//        System.out.println("xWing: " + xWing.position);
     }
 
 }
