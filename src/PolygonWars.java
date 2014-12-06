@@ -88,7 +88,7 @@ public class PolygonWars extends JFrame
         @Override
         public void actionPerformed(ActionEvent e) 
         {
-            try {
+/*            try {
                 if (e.getSource() == btnStartGame) 
                 {
                 }
@@ -107,7 +107,7 @@ public class PolygonWars extends JFrame
             }    
             catch (Exception ex) {
             }
-        } 
+        */}
     }
     
     public static void main(String [] args) throws Exception {

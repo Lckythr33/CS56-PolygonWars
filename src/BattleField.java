@@ -55,11 +55,6 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         timer.start();
     }
 
-    public void setMouseClick(boolean theClick)
-    {
-//        blnMouseClick = theClick;
-    }
-
     @Override
     public void mouseDragged(MouseEvent e)
     {
@@ -80,18 +75,12 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     {
         // TODO: check https://github.com/ncoop/intro-java/blob/master/9e_18_36/chapter18/DisplayAngles.java
         // for a way to keep the object responsive when the cursor moves out of frame
-//        if (!blnMouseClick)
-//        {
-            xNew = e.getX();
-            yNew = e.getY();
+        xNew = e.getX();
+        yNew = e.getY();
 
-            // move ship
-//            xWing.translate(xNew-xWing.position.x, yNew-xWing.position.y);
-//            xWing.translate(xWing.position.x - xNew, xWing.position.y - yNew);
-//            xWing.position = new Point(xNew, yNew);
-            xWing.moveTo(e.getPoint());
-            repaint();
-//        }
+        // move ship
+        xWing.moveTo(e.getPoint());
+        repaint();
     }
 
     @Override
@@ -106,6 +95,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
 
     @Override
     public void mouseClicked(MouseEvent e)
+    // TODO: shoot missiles!
     {
 /*
         if (blnMouseClick)      //  Mouse Click
