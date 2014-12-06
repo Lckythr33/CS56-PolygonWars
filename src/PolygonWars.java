@@ -4,43 +4,32 @@ import java.awt.event.*;
 
 public class PolygonWars extends JFrame 
 {
-    private Container c;
-    private JPanel p1;
-    private BattleField p2;
-    private JPanel settings;
-    private JPanel missileInventory;
-    private JPanel starInventory;
-    private JPanel currentSettingsPanel;
-    private JTextField userHistoryTextField;
-    private JPanel userInputPanel;
-    private JPanel mousePanel;
-    private JTextField speedScoreTextField;
+    private BattleField battleField;
     private String[] level = {"Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9"};
-    private JComboBox cbLevel = new JComboBox<String>(level);
-    private ButtonGroup grpMouse = new ButtonGroup();
+    private JComboBox cbLevel = new JComboBox<>(level);
     private JRadioButton rdoMouseClick;
     private JRadioButton rdoMouseMove;
     private JButton btnStartGame;
     
     public PolygonWars()
     {
-        c = getContentPane();
-        c.setLayout(new GridLayout(1, 2));
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new GridLayout(1, 2));
         
-        //  p1 is input and output panel that contains: settings panel, missile panel and star panel
-        p1 = new JPanel();
-        p1.setLayout(new GridLayout(3, 1));
+        //  sidePanel is input and output panel that contains: settings panel, missile panel and star panel
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridLayout(3, 1));
         
         //  1. Start settings panel
-        settings = new JPanel();
+        JPanel settings = new JPanel();
         settings.setLayout(new GridLayout(2, 1));
         
         //  1a. Start current settings panel
-        currentSettingsPanel = new JPanel();
+        JPanel currentSettingsPanel = new JPanel();
         currentSettingsPanel.setLayout(new GridLayout(2, 1));
         
         //  Start user input panel
-        userInputPanel = new JPanel();
+        JPanel userInputPanel = new JPanel();
         userInputPanel.setLayout(new GridLayout(1, 3));
         
         UserInputListener listener = new UserInputListener();      //  for Level combobox and StartGame button
@@ -66,11 +55,12 @@ public class PolygonWars extends JFrame
         //rdoMouseMove.setMnemonic('M');
         
         //  mouse panel
-        mousePanel = new JPanel();
+        JPanel mousePanel = new JPanel();
         mousePanel.setLayout(new GridLayout(2, 1));
         mousePanel.add(rdoMouseClick);
         mousePanel.add(rdoMouseMove);
-        
+
+        ButtonGroup grpMouse = new ButtonGroup();
         grpMouse.add(rdoMouseClick);
         grpMouse.add(rdoMouseMove);
         
@@ -78,8 +68,8 @@ public class PolygonWars extends JFrame
         userInputPanel.add(mousePanel);
         userInputPanel.add(btnStartGame);
         //  End user input panel
-        
-        speedScoreTextField = new JTextField();
+
+        JTextField speedScoreTextField = new JTextField();
         speedScoreTextField.setEditable(false);
         speedScoreTextField.setBackground(Color.MAGENTA);
         
@@ -89,7 +79,7 @@ public class PolygonWars extends JFrame
         //  End current settings panel
         
         //  1b. User History text area
-        userHistoryTextField = new JTextField();      
+        JTextField userHistoryTextField = new JTextField();
         userHistoryTextField.setEditable(false);
         userHistoryTextField.setBackground(Color.GRAY);
         
@@ -98,25 +88,27 @@ public class PolygonWars extends JFrame
         //  End settings panel
         
         //  2. Missile panel
-        missileInventory = new JPanel();
+        JPanel missileInventory = new JPanel();
         missileInventory.setBackground(Color.YELLOW);
         
         //  3. Star panel
-        starInventory = new JPanel();
+        JPanel starInventory = new JPanel();
         starInventory.setBackground(Color.CYAN);
         
-        p1.add(settings);
-        p1.add(missileInventory);
-        p1.add(starInventory);
+        sidePanel.add(settings);
+        sidePanel.add(missileInventory);
+        sidePanel.add(starInventory);
         
         //  Game panel
+/*
         if (rdoMouseClick.isSelected())
-            p2 = new BattleField(true);
+            battleField = new BattleField(true);
         else
-            p2 = new BattleField(false);
-        
-        c.add(p1);
-        c.add(p2);
+            battleField = new BattleField(false);
+*/
+
+        contentPane.add(sidePanel);
+        contentPane.add(new BattleField());
     }
     
     
@@ -134,11 +126,11 @@ public class PolygonWars extends JFrame
                 }
                 else if (e.getSource() == rdoMouseClick) 
                 {
-                    p2.setMouseClick(true);   
+                    battleField.setMouseClick(true);
                 }
                 else if (e.getSource() == rdoMouseMove) 
                 {
-                    p2.setMouseClick(false);
+                    battleField.setMouseClick(false);
                 }
             
             }    
@@ -149,11 +141,11 @@ public class PolygonWars extends JFrame
     
     public static void main(String [] args) throws Exception {
 		PolygonWars win= new PolygonWars();
-		win.setSize(900, 660);		
+		win.setSize(900, 660);
         win.setTitle("Polygon Wars");
 		win.setVisible(true);
         win.setLocationRelativeTo(null);
-		win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		win.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	} 
 }
 

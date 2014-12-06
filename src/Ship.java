@@ -9,6 +9,9 @@ class Ship extends Polygon
     private static int width = 26;
     private static int height = 50;
 
+    Point position = new Point(0, 0);
+    Color color = Color.WHITE;
+
     public Ship()
     {
 
@@ -53,4 +56,11 @@ class Ship extends Polygon
         return nPoints;
     }
 
+    public void moveTo(Point destination) {
+        position = destination;
+        for (int i = 0; i < nPoints; i++) {
+            xPoints[i] = destination.x;
+            yPoints[i] = destination.y;
+        }
+    }
 }
