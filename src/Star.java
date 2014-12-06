@@ -16,8 +16,11 @@ public class Star extends Polygon
 
         private boolean cw;
 
+
+
         // distance moved per timeslice; function of speed and heading
         private double dx, dy;
+
 
         private Point2D position = new Point2D.Double(0, 0);
 
@@ -57,6 +60,7 @@ public class Star extends Polygon
             super.translate((int)dx, (int)dy);
             spin();
             position.setLocation(position.getX() + dx, position.getY() + dy);
+
         }
 
         private void spin() {
@@ -113,25 +117,6 @@ public class Star extends Polygon
             // set the initial direction to a random number in the arc from 7/6*pi to 11/6*pi
             setHeading(Math.random() * 4/6 * Math.PI + (7/6 * Math.PI));
         }
-/*
-            
-            public static void main (String[] args)
-            {
-                String nString = JOptionPane.showInputDialog("Enter the number of points for the polygon (3-10)");
-                int points = Integer.parseInt(nString);
-             
-                JFrame jf = new JFrame();
-                jf.setVisible(true);
-                jf.setSize(120,180);
-                jf.setLocation(600, 400);
-                jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                
-                Star rpp = new Star(points);
-                
-                jf.add(rpp);
-                rpp.setVisible(true);
-                
-            }
-*/
+
 }
 

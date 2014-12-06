@@ -2,10 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class PolygonWars extends JFrame 
 {
-    private static final int WIDTH = 1200, HEIGHT = 900;
+    private static final int WIDTH = 800, HEIGHT = 600;
     private static final int MAX_LEVEL = 9;
     private BattleField battleField;
     private JComboBox<String> cbLevel = new JComboBox<>();
@@ -29,7 +30,7 @@ public class PolygonWars extends JFrame
         //  hud is input and output panel that contains: settings panel, missile panel and star panel
         JPanel hud = new JPanel();
         hud.setLayout(new GridLayout(1, 4));
-        
+        hud.setCursor(Cursor.getDefaultCursor());
         //  1. select level before game start; show level after game start
         JLabel levelLbl = new JLabel();
         // TODO: update this text when level changes
@@ -77,6 +78,15 @@ public class PolygonWars extends JFrame
         else
             battleField = new BattleField(false);
 */
+        // Transparent 16 x 16 pixel cursor image.
+        BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+
+        // Create a new blank cursor.
+        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+                cursorImg, new Point(0, 0), "blank cursor");
+
+// Set the blank cursor to the JFrame.
+        contentPane.setCursor(blankCursor);
 
         contentPane.add(hud, BorderLayout.SOUTH);
         contentPane.add(new BattleField(WIDTH, HEIGHT), BorderLayout.CENTER);
@@ -86,8 +96,7 @@ public class PolygonWars extends JFrame
     public class UserInputListener implements ActionListener {
     
         @Override
-        public void actionPerformed(ActionEvent e) 
-        {
+        public void actionPerformed(ActionEvent e) {
 /*            try {
                 if (e.getSource() == btnStartGame) 
                 {
@@ -107,7 +116,10 @@ public class PolygonWars extends JFrame
             }    
             catch (Exception ex) {
             }
-        */}
+
+
+        */
+        }
     }
     
     public static void main(String [] args) throws Exception {

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 class BattleField extends JPanel implements MouseMotionListener, MouseListener
 {
+
+
     private int width, height;
     private Ship xWing = new Ship();
     private ArrayList<Star> stars = new ArrayList<>();
@@ -16,6 +18,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     private final Timer timer = new Timer(TIME_SLICE, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+
             for (Star star : stars) {
                 star.move();
             }
@@ -51,6 +54,12 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         spawnStar();
         spawnStar();
         spawnStar();
+        spawnStar();
+        spawnStar();
+        spawnStar();
+        spawnStar();
+        spawnStar();
+
 //        xWing.translate(225, 330);
         timer.start();
     }
@@ -69,6 +78,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
 
         //repaint();
     }
+
 
     @Override
     public void mouseMoved(MouseEvent e)
@@ -132,6 +142,13 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     {
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 /*
     public Dimension getPreferredSize()
     {
