@@ -59,8 +59,11 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         spawnStar();
         spawnStar();
         spawnStar();
+        spawnStar();
+        spawnStar();
+        spawnStar();
 
-//        xWing.translate(225, 330);
+     // xWing.translate(225, 330);
         timer.start();
     }
 

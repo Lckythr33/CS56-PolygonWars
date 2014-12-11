@@ -35,7 +35,12 @@ public class Star extends Polygon
             Color.ORANGE,
             Color.YELLOW,
             Color.GREEN,
-            Color.CYAN
+            Color.CYAN,
+                Color.PINK,
+                Color.MAGENTA,
+                Color.BLUE,
+                Color.LIGHT_GRAY,
+                Color.DARK_GRAY,
         };
 
         public void setHeading(double heading) {
