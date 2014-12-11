@@ -41,7 +41,15 @@ public class Star extends Polygon
                 Color.BLUE,
                 Color.LIGHT_GRAY,
                 Color.DARK_GRAY,
+                Color.BLACK
         };
+
+        public void reverseDx() {
+            dx = -dx;
+        }
+        public void reverseDy() {
+        dy = -dy;
+    }
 
         public void setHeading(double heading) {
             this.heading = heading;
@@ -65,7 +73,6 @@ public class Star extends Polygon
             super.translate((int)dx, (int)dy);
             spin();
             position.setLocation(position.getX() + dx, position.getY() + dy);
-
         }
 
         private void spin() {

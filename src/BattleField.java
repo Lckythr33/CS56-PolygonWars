@@ -21,6 +21,11 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
 
             for (Star star : stars) {
                 star.move();
+                if(star.getPos().getX() < 0 || star.getPos().getX() > width)
+                    star.reverseDx();
+
+                if(star.getPos().getY() < 0 || star.getPos().getY() > height)
+                    star.reverseDy();
             }
             repaint();
 //            System.out.println("Star: " + stars.get(0).getPos());
@@ -145,13 +150,13 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     {
     }
 
-    public int getWidth() {
+    /*public int getWidth() {
         return width;
     }
 
     public int getHeight() {
         return height;
-    }
+    }*/
 /*
     public Dimension getPreferredSize()
     {
