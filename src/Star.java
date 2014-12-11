@@ -14,21 +14,20 @@ public class Star extends Polygon
         // direction of motion
         private double heading;
 
+        // direction of rotation
         private boolean cw;
-
-
 
         // distance moved per timeslice; function of speed and heading
         private double dx, dy;
 
-
         private Point2D position = new Point2D.Double(0, 0);
+
+        public static final double INNER_RADIUS = 10;
+        public static final double OUTER_RADIUS = INNER_RADIUS * 2;
 
         // angle between adjacent vertices; equal to 2*pi / (number of points * 2)
         private double dTheta;
-        
-        public static final double INNER_RADIUS = 10, OUTER_RADIUS = 20;
-        double angle = 0;
+        double angle;
 
         public static Color outlineColor = Color.WHITE;
 
@@ -38,12 +37,12 @@ public class Star extends Polygon
             Color.YELLOW,
             Color.GREEN,
             Color.CYAN,
-                Color.PINK,
-                Color.MAGENTA,
-                Color.BLUE,
-                Color.LIGHT_GRAY,
-                Color.DARK_GRAY,
-                Color.BLACK
+            Color.PINK,
+            Color.MAGENTA,
+            Color.BLUE,
+            Color.LIGHT_GRAY,
+            Color.DARK_GRAY,
+            Color.BLACK
         };
 
         public void reverseDx() {
@@ -67,8 +66,12 @@ public class Star extends Polygon
             return color;
         }
 
-        public Point2D getPos() {
-            return position;
+        public double getX() {
+            return position.getX();
+        }
+
+        public double getY() {
+            return position.getY();
         }
 
         public void move() {
@@ -120,7 +123,7 @@ public class Star extends Polygon
 
             spin();
 
-            // set the color
+            // set the innerColor
             if (this.points - 3 > colors.length)
                 color = Color.BLACK;
             else

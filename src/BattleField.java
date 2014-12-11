@@ -3,16 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-class BattleField extends JPanel implements MouseMotionListener, MouseListener
-{
-
+class BattleField extends JPanel implements MouseMotionListener, MouseListener {
 
     private int width, height;
     private Ship xWing = new Ship();
     private ArrayList<Star> stars = new ArrayList<>();
-    private int xNew;
-    private int yNew;
+    private ArrayList<Missile> missiles = new ArrayList<>();
     private boolean blnMouseClick = false;
+    private static final Color BACKGROUND_COLOR = new Color(0x00, 0x00, 0x88);
     private static final int TIME_SLICE = 10;
 
     private final Timer timer = new Timer(TIME_SLICE, new ActionListener() {
@@ -21,12 +19,26 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
 
             for (Star star : stars) {
                 star.move();
-                if(star.getPos().getX() < 0 || star.getPos().getX() > width)
+                if(star.getX() < 0 || star.getX() > width)
                     star.reverseDx();
 
-                if(star.getPos().getY() < 0 || star.getPos().getY()+ Star.OUTER_RADIUS * 4 > height)
+                if(star.getY() < 0 || star.getY()+ Star.OUTER_RADIUS * 4 > height)
                     star.reverseDy();
             }
+
+            ArrayList<Missile> deadMissiles = new ArrayList<>();
+            for (Missile missile : missiles) {
+                missile.move();
+                // queue dead missiles for removal
+                if (missile.getY() < 0)
+                    deadMissiles.add(missile);
+            }
+
+            for (Missile missile : deadMissiles) {
+                // remove the dead missiles
+                missiles.remove(missile);
+            }
+
             repaint();
 //            System.out.println("Star: " + stars.get(0).getPos());
         }
@@ -41,7 +53,11 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         );
 
         stars.add(newStar);
+    }
 
+    public void spawnMissile(Point spawnPoint) {
+        Missile newMissile = new Missile(spawnPoint);
+        missiles.add(newMissile);
     }
 
     public BattleField(int width, int height)
@@ -49,7 +65,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         this.width = width;
         this.height = height;
 //        this.blnMouseClick = blnMouseClick;
-        this.setBackground(new Color(0x00, 0x00, 0x88));
+        this.setBackground(BACKGROUND_COLOR);
         this.setLayout(null);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
@@ -82,8 +98,8 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     {
         // TODO: check https://github.com/ncoop/intro-java/blob/master/9e_18_36/chapter18/DisplayAngles.java
         // for a way to keep the object responsive when the cursor moves out of frame
-        xNew = e.getX();
-        yNew = e.getY();
+        int xNew = e.getX();
+        int yNew = e.getY();
 
         // move ship
         xWing.moveTo(e.getPoint());
@@ -102,7 +118,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     @Override
     public void mouseClicked(MouseEvent e) {
     // TODO: shoot missiles!
-        System.out.println("mouseClicked");
+        spawnMissile(e.getPoint());
 /*
         if (blnMouseClick)      //  Mouse Click
         {
@@ -160,6 +176,13 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
             g.fillPolygon(star);
             g.setColor(Star.outlineColor);
             g.drawPolygon(star);
+        }
+
+        for (Missile missile : missiles) {
+            g.setColor(Missile.innerColor);
+            g.fillPolygon(missile);
+            g.setColor(Missile.outlineColor);
+            g.drawPolygon(missile);
         }
 
         g.setColor(xWing.color);
