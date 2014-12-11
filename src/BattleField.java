@@ -54,19 +54,8 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
-        spawnStar();
+        for (int i = 0; i < 12; i++)
+            spawnStar();
 
      // xWing.translate(225, 330);
         timer.start();
@@ -102,19 +91,18 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     }
 
     @Override
-    public void mousePressed(MouseEvent e)
-    {
+    public void mousePressed(MouseEvent e) {
+//        System.out.println("mousePressed");
     }
 
     @Override
-    public void mouseReleased(MouseEvent e)
-    {
+    public void mouseReleased(MouseEvent e) {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e)
+    public void mouseClicked(MouseEvent e) {
     // TODO: shoot missiles!
-    {
+        System.out.println("mouseClicked");
 /*
         if (blnMouseClick)      //  Mouse Click
         {
@@ -141,13 +129,11 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener
     }
 
     @Override
-    public void mouseEntered(MouseEvent e)
-    {
+    public void mouseEntered(MouseEvent e) {
     }
 
     @Override
-    public void mouseExited(MouseEvent e)
-    {
+    public void mouseExited(MouseEvent e) {
     }
 
     /*public int getWidth() {
