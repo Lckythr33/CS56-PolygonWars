@@ -30,6 +30,8 @@ public class Star extends Polygon
         public static final double INNER_RADIUS = 10, OUTER_RADIUS = 20;
         double angle = 0;
 
+        public static Color outlineColor = Color.WHITE;
+
         static Color colors[] = new Color[] {
             Color.RED, // 3 points
             Color.ORANGE,
@@ -90,6 +92,7 @@ public class Star extends Polygon
                         (int)(position.getY() + radius * Math.sin(theta)));
             }
         }
+
 
         public Star(int points, double x, double y) {
             // create dummy polygon
