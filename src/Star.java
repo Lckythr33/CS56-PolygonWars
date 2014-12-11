@@ -52,6 +52,10 @@ public class Star extends Polygon
         dy = -dy;
     }
 
+        public int getPoints() {
+            return points;
+        }
+
         public void setHeading(double heading) {
             this.heading = heading;
             dx = speed * Math.cos(heading);
@@ -95,6 +99,7 @@ public class Star extends Polygon
                         (int)(position.getY() + radius * Math.sin(theta)));
             }
         }
+
 
 
         public Star(int points, double x, double y) {

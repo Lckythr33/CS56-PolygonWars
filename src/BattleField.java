@@ -10,13 +10,25 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     private ArrayList<Star> stars = new ArrayList<>();
     private ArrayList<Missile> missiles = new ArrayList<>();
     private boolean blnMouseClick = false;
+    private static final int STAR_SPAWN_DELAY = 100;
+    private static int starSpawnTimeout = 0;
+
     private static final Color BACKGROUND_COLOR = new Color(0x00, 0x00, 0x88);
     private static final int TIME_SLICE = 10;
+    private static final int MISSILE_LIMIT = 3;
+    private static final int STAR_LIMIT = 8;
 
     private final Timer timer = new Timer(TIME_SLICE, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 
+            starSpawnTimeout ++;
+            if (starSpawnTimeout >= STAR_SPAWN_DELAY && stars.size() <= STAR_LIMIT) {
+                spawnStar();
+                starSpawnTimeout = 0;
+            }
+
+            // move stars
             for (Star star : stars) {
                 star.move();
                 if(star.getX() < 0 || star.getX() > width)
@@ -26,18 +38,43 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
                     star.reverseDy();
             }
 
+            // list of missiles and stars to be removed
             ArrayList<Missile> deadMissiles = new ArrayList<>();
+            ArrayList<Star> deadStars = new ArrayList<>();
+            ArrayList<Star> damagedStars = new ArrayList<>();
+
+            // check for missile-star collisions
+            for (Missile missile : missiles) {
+                for (Star star : stars) {
+                    if (missile.intersects(star.getBounds2D())) {
+                        deadMissiles.add(missile);
+                        if (star.getPoints() <= 3)
+                            deadStars.add(star);
+                        else
+                            damagedStars.add(star);
+                    }
+                }
+            }
+
+            // check for escaped missiles
             for (Missile missile : missiles) {
                 missile.move();
-                // queue dead missiles for removal
                 if (missile.getY() < 0)
                     deadMissiles.add(missile);
             }
 
-            for (Missile missile : deadMissiles) {
-                // remove the dead missiles
-                missiles.remove(missile);
+            // damage the stars
+            for (Star star : damagedStars) {
+                Star newStar = new Star(star.getPoints() - 1, star.getX(), star.getY());
+                stars.remove(star);
+                stars.add(newStar);
             }
+
+            // remove the dead missiles and stars
+            for (Missile missile : deadMissiles)
+                missiles.remove(missile);
+            for (Star star : deadStars)
+                stars.remove(star);
 
             repaint();
 //            System.out.println("Star: " + stars.get(0).getPos());
@@ -69,10 +106,12 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
         this.setLayout(null);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
+/*
 
         for (int i = 0; i < 12; i++)
             spawnStar();
 
+*/
      // xWing.translate(225, 330);
         timer.start();
     }
@@ -118,29 +157,9 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
     // TODO: shoot missiles!
-        spawnMissile(e.getPoint());
-/*
-        if (blnMouseClick)      //  Mouse Click
-        {
-            xNew = e.getX();
-            yNew = e.getY();
-
-            if (xWing.contains(xNew, yNew))
-            {
-                // fire missile
-            }
-            else
-            {
-                // move ship
-                xWing.translate(xNew-xWing.position.x, yNew-xWing.position.y);
-                repaint();
-            }
-
-        }
-        else                    //  Using Mouse Move so fire missile
-        {
-        }
-*/
+//        System.out.println("missile #: " + missiles.size());
+        if (missiles.size() <= MISSILE_LIMIT)
+            spawnMissile(e.getPoint());
 
     }
 
