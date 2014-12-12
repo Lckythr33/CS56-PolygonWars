@@ -9,14 +9,13 @@ import java.awt.image.BufferedImage;
 public class PolygonWars extends JFrame implements KeyListener, ActionListener {
     private static final int WIDTH = 800, HEIGHT = 600;
     private static final int MAX_LEVEL = 9;
+    private static int currentLevel=0;
+    private static int MAX_STARS =0;
     private BattleField battleField;
     private JComboBox<String> cbLevel = new JComboBox<>();
-    private JRadioButton rdoMouseClick;
-    private JRadioButton rdoMouseMove;
-    private JButton btnStartGame;
-    
-    public PolygonWars()
-    {
+    private static JLabel scoreLbl = new JLabel(), starsLbl = new JLabel(), missilesLbl = new JLabel();
+
+    public PolygonWars() {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
@@ -38,33 +37,35 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         levelPnl.setBackground(Color.GRAY);
         levelPnl.add(cbLevel);
 //        levelPnl.add(levelLbl);
+        levelPnl.setBorder(BorderFactory.createLineBorder(Color.black));
         // TODO: remove combobox and replace with label once the game starts
 
         //  2. show missile supply
-        JLabel missilesLbl = new JLabel();
+
         // TODO: update this label when missiles change
         // TODO: use a missile icon with text
-        missilesLbl.setText("missiles go here");
+        missilesLbl.setText("Missile Status: Ready");
         JPanel missilesPnl = new JPanel();
-        missilesPnl.setBackground(Color.YELLOW);
+        missilesPnl.setBackground(Color.GRAY);
         missilesPnl.add(missilesLbl);
-        
+        missilesPnl.setBorder(BorderFactory.createLineBorder(Color.black));
+
         //  3. show stars remaining
-        JLabel starsLbl = new JLabel();
         // TODO: update this label when stars change
         // TODO: use a star icon with text
-        starsLbl.setText("stars go here");
+        starsLbl.setText("Stars: " + BattleField.getStar());
         JPanel starsPnl = new JPanel();
-        starsPnl.setBackground(Color.CYAN);
+        starsPnl.setBackground(Color.GRAY);
         starsPnl.add(starsLbl);
+        starsPnl.setBorder(BorderFactory.createLineBorder(Color.black));
 
         //  4. show score
-        JLabel scoreLbl = new JLabel();
         // TODO: update this label when score changes
-        scoreLbl.setText("score goes here");
+        scoreLbl.setText("Score: " + BattleField.getScore());
         JPanel scorePnl = new JPanel();
-        scorePnl.setBackground(Color.MAGENTA);
+        scorePnl.setBackground(Color.GRAY);
         scorePnl.add(scoreLbl);
+        scorePnl.setBorder(BorderFactory.createLineBorder(Color.black));
 
         hud.add(levelPnl);
         hud.add(missilesPnl);
@@ -103,6 +104,17 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         this.addKeyListener(this);
     }
 
+    public void actionPerformed(ActionEvent e) {
+        cbLevel = (JComboBox)e.getSource();
+        currentLevel = cbLevel.getSelectedIndex();
+        MAX_STARS = currentLevel + 5;
+        System.out.println(MAX_STARS);
+            }
+
+    public static int getMaxStars() {
+        return MAX_STARS;
+    }
+
     // TODO: respond to key events to restart after game over
     @Override
     public void keyTyped(KeyEvent e) {
@@ -119,11 +131,19 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         System.out.println("key released");
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("action");
-        battleField.requestFocusInWindow();
+
+    public static void updateScore() {
+        scoreLbl.setText("Score: " + BattleField.getScore());
     }
+
+    public static void updateStars() {
+    starsLbl.setText("Stars: "+BattleField.getStar());
+}
+
+    public static void updateMissiles() {
+        missilesLbl.setText("Missile Status: "+BattleField.getReloading());
+    }
+
 
     public static void main(String [] args) throws Exception {
 		PolygonWars win = new PolygonWars();

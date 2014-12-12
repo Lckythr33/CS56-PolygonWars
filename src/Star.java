@@ -39,7 +39,8 @@ public class Star extends Polygon
             Color.CYAN,
             Color.PINK,
             Color.MAGENTA,
-            Color.BLUE,
+            new Color(0x99,0x33,0x00),
+            new Color(0x00,0x33,0x00),
             Color.LIGHT_GRAY,
             Color.DARK_GRAY,
             Color.BLACK

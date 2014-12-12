@@ -9,7 +9,6 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     private Ship xWing = new Ship();
     private ArrayList<Star> stars = new ArrayList<>();
     private ArrayList<Missile> missiles = new ArrayList<>();
-    private boolean blnMouseClick = false;
     private static final int STAR_SPAWN_DELAY = 100;
     private static int starSpawnTimeout = 0;
     private static JLabel statusLbl;
@@ -18,16 +17,20 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     private static final Color BACKGROUND_COLOR = new Color(0x00, 0x00, 0x88);
     private static final Color BACKGROUND_COLOR_DEAD = new Color(0xcc, 0x44, 0x44);
     private static final int TIME_SLICE = 10;
-    private static final int MISSILE_LIMIT = 3;
-    private static final int STAR_LIMIT = 8;
+    private static final int MISSILE_LIMIT = 2;
+    private static int score=0;
+    private static int starcount=0;
+    private static String Reloading="";
 
     private final Timer timer = new Timer(TIME_SLICE, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 
             starSpawnTimeout ++;
-            if (starSpawnTimeout >= STAR_SPAWN_DELAY && stars.size() <= STAR_LIMIT) {
+            if (starSpawnTimeout >= STAR_SPAWN_DELAY && stars.size() < PolygonWars.getMaxStars()) {
                 spawnStar();
+                starcount += 1;
+                PolygonWars.updateStars();
                 starSpawnTimeout = 0;
             }
 
@@ -49,10 +52,16 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
             // check for missile-star collisions
             for (Star star : stars) {
                 for (Missile missile : missiles) {
-                    if (missile.intersects(star.getBounds2D())) {
+                    if (missile.intersects(star.getBounds2D()))
+                    {
+                       score += 100;
+                        PolygonWars.updateScore();
                         deadMissiles.add(missile);
-                        if (star.getPoints() <= 3)
+                        if (star.getPoints() <= 3) {
+                            starcount -= 1;
+                            PolygonWars.updateStars();
                             deadStars.add(star);
+                        }
                         else
                             damagedStars.add(star);
                     }
@@ -65,8 +74,9 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
             // check for escaped missiles
             for (Missile missile : missiles) {
                 missile.move();
-                if (missile.getY() < 0)
+                if (missile.getY() < 0) {
                     deadMissiles.add(missile);
+                }
             }
 
             // damage the stars
@@ -79,6 +89,11 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
             // remove the dead missiles and stars
             for (Missile missile : deadMissiles)
                 missiles.remove(missile);
+            if (missiles.size() <= MISSILE_LIMIT){
+                setReloading("Ready");
+                PolygonWars.updateMissiles();
+            }
+
             for (Star star : deadStars)
                 stars.remove(star);
 
@@ -86,6 +101,22 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
 //            System.out.println("Star: " + stars.get(0).getPos());
         }
     });
+
+    public void setReloading(String reloading) {
+        Reloading = reloading;
+    }
+
+    public static String getReloading() {
+        return Reloading;
+    }
+
+    public static int getScore(){
+        return score;
+    }
+
+    public static int getStar() {
+        return starcount;
+    }
 
     private void gameStart() {
         stars.clear();
@@ -137,13 +168,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        //x = e.getX();
-        //y = e.getY();
 
-        //setLocation(x, y);
-        //xWing.translate(e.getX() - x, e.getY() - y);
-
-        //repaint();
     }
 
 
@@ -168,13 +193,15 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     public void mouseReleased(MouseEvent e) {
     }
 
+
     @Override
     public void mouseClicked(MouseEvent e) {
 //        System.out.println("missile #: " + missiles.size());
         if (missiles.size() <= MISSILE_LIMIT && xWing.isAlive())
             spawnMissile(e.getPoint());
-
-    }
+        setReloading("Reloading");
+        PolygonWars.updateMissiles();
+               }
 
     @Override
     public void mouseEntered(MouseEvent e) {
