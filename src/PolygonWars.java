@@ -2,10 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
-public class PolygonWars extends JFrame 
-{
+public class PolygonWars extends JFrame implements KeyListener, ActionListener {
     private static final int WIDTH = 800, HEIGHT = 600;
     private static final int MAX_LEVEL = 9;
     private BattleField battleField;
@@ -19,13 +20,11 @@ public class PolygonWars extends JFrame
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
-        UserInputListener listener = new UserInputListener();      //  for Level combobox and StartGame button
-
         for (int i = 1; i <= MAX_LEVEL; i++)
             cbLevel.addItem("Level " + i);
 
         cbLevel.setSelectedItem(0);
-        cbLevel.addActionListener(listener);
+        cbLevel.addActionListener(this);
 
         //  hud is input and output panel that contains: settings panel, missile panel and star panel
         JPanel hud = new JPanel();
@@ -89,39 +88,43 @@ public class PolygonWars extends JFrame
         contentPane.setCursor(blankCursor);
 
         contentPane.add(hud, BorderLayout.SOUTH);
-        contentPane.add(new BattleField(WIDTH, HEIGHT), BorderLayout.CENTER);
-    }
-    
-    
-    public class UserInputListener implements ActionListener {
-    
-        @Override
-        public void actionPerformed(ActionEvent e) {
-/*            try {
-                if (e.getSource() == btnStartGame) 
-                {
-                }
-                else if (e.getSource() == cbLevel) 
-                {
-                }
-                else if (e.getSource() == rdoMouseClick) 
-                {
-                    battleField.setMouseClick(true);
-                }
-                else if (e.getSource() == rdoMouseMove) 
-                {
-                    battleField.setMouseClick(false);
-                }
-            
-            }    
-            catch (Exception ex) {
-            }
 
+        JLabel statusLbl = new JLabel("", SwingConstants.CENTER);
+        statusLbl.setOpaque(false);
+        statusLbl.setFont(new Font("Sans Serif", Font.BOLD, 92));
+        statusLbl.repaint();
 
-        */
-        }
+        battleField = new BattleField(WIDTH, HEIGHT, statusLbl);
+        contentPane.add(battleField, BorderLayout.CENTER);
+
+        battleField.setLayout(new BorderLayout());
+        battleField.add(statusLbl, BorderLayout.CENTER);
+
+        this.addKeyListener(this);
     }
-    
+
+    // TODO: respond to key events to restart after game over
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.println("key pressed");
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("key pressed");
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        System.out.println("key released");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("action");
+        battleField.requestFocusInWindow();
+    }
+
     public static void main(String [] args) throws Exception {
 		PolygonWars win = new PolygonWars();
 
@@ -131,7 +134,7 @@ public class PolygonWars extends JFrame
         win.setLocationRelativeTo(null);
         win.setResizable(false);
 		win.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	} 
+	}
 }
 
 

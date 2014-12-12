@@ -6,6 +6,7 @@ class Ship extends Polygon
     //  Polygon WIDTH and HEIGHT
     private static final int WIDTH = 26, HEIGHT = 50;
 
+    private boolean alive;
     Point2D position = new Point2D.Double(0, 0);
     Color color = Color.WHITE;
 
@@ -23,5 +24,17 @@ class Ship extends Polygon
         int dy = destination.y - (int)position.getY();
         position = destination;
         translate(dx, dy);
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void die() {
+        alive = false;
+    }
+
+    public void spawn() {
+        alive = true;
     }
 }
