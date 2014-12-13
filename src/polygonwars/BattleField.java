@@ -20,8 +20,9 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     private static JLabel statusLbl;
     private static int starCount = 0;
     private static String reloading = "";
-
     private int width, height;
+
+    private PolygonWars parent;
     private Ship xWing = new Ship();
     private ArrayList<Star> stars = new ArrayList<>();
     private ArrayList<Missile> missiles = new ArrayList<>();
@@ -37,6 +38,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
                 PolygonWars.updateStars();
                 starSpawnTimeout = 0;
             }
+
 
             // move stars
             for (Star star : stars) {
@@ -57,7 +59,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
             for (Star star : stars) {
                 for (Missile missile : missiles) {
                     if (missile.intersects(star.getBounds2D())) {
-                        PolygonWars.updateScore(100);
+                        parent.updateScore(100);
                         deadMissiles.add(missile);
                         if (star.getPoints() <= 3) {
                             starCount -= 1;
@@ -120,6 +122,12 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
         this.setBackground(BACKGROUND_COLOR_DEAD);
     }
 
+    public void gameWin() {
+        xWing.setInvincible();
+        statusLbl.setText(WIN_MESSAGE);
+        this.setBackground(BACKGROUND_COLOR_WIN);
+    }
+
     public void spawnStar() {
         // create a star with a random number of points between 3 and the length of the colors array
         Star newStar = new Star(
@@ -136,7 +144,8 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
         missiles.add(newMissile);
     }
 
-    public BattleField(int width, int height, JLabel statusLbl) {
+    public BattleField(PolygonWars parent, int width, int height, JLabel statusLbl) {
+        this.parent = parent;
         this.width = width;
         this.height = height;
         BattleField.statusLbl = statusLbl;

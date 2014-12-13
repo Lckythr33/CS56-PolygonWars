@@ -1,6 +1,7 @@
 package polygonwars;
 
 import javax.swing.*;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
     private static final Color LABEL_BACKGROUND_COLOR = Color.GRAY;
     private static final Font LABEL_FONT = new Font("Sans Serif", Font.BOLD, 16);
 
+    private static AudioClip bgm;
     private static int currentLevel = 1;
     private static int maxStars = 0;
 
@@ -60,7 +62,6 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         missilesPnl.setBorder(BorderFactory.createLineBorder(Color.black));
 
         //  3. show stars remaining
-        // TODO: update this label when stars change
         // TODO: use a star icon with text
         JPanel starsPnl = new JPanel();
         starsPnl.setBackground(LABEL_BACKGROUND_COLOR);
@@ -70,7 +71,6 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         starsPnl.setBorder(BorderFactory.createLineBorder(Color.black));
 
         //  4. show score
-        updateScore(0);
         JPanel scorePnl = new JPanel();
         scorePnl.setBackground(LABEL_BACKGROUND_COLOR);
         scoreLbl.setFont(LABEL_FONT);
@@ -106,22 +106,23 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         statusLbl.setFont(new Font("Sans Serif", Font.BOLD, 92));
         statusLbl.repaint();
 
-        battleField = new BattleField(WIDTH, HEIGHT, statusLbl);
+        battleField = new BattleField(this, WIDTH, HEIGHT, statusLbl);
         contentPane.add(battleField, BorderLayout.CENTER);
 
         battleField.setLayout(new BorderLayout());
         battleField.add(statusLbl, BorderLayout.CENTER);
 
         updateStars();
+        updateScore(0);
+
         this.addKeyListener(this);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        cbLevel = (JComboBox)e.getSource();
-        currentLevel = cbLevel.getSelectedIndex() + 1;
-        maxStars = currentLevel + 4;
-        System.out.println(maxStars + " " + cbLevel.getSelectedIndex());
-    }
+   public void actionPerformed(ActionEvent e) {
+       cbLevel = (JComboBox)e.getSource();
+       currentLevel = cbLevel.getSelectedIndex() + 1;
+       maxStars = currentLevel + 4;
+   }
 
     public static int getMaxStars() {
         return maxStars;
@@ -143,13 +144,17 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         System.out.println("key released");
     }
 
-    public static void updateScore(int change) {
+    public void updateScore(int change) {
         score += change;
-        scoreLbl.setText(String.format("Score: %09d", score));
+        scoreLbl.setText(String.format("Score: %05d", score));
         if (score >= currentLevel * LEVEL_SCORE_PT_REQ) {
-            currentLevel = score/LEVEL_SCORE_PT_REQ + 1;
-            System.out.println("Level changed to " + currentLevel);
-            cbLevel.setSelectedIndex(currentLevel - 1);
+            currentLevel = score / LEVEL_SCORE_PT_REQ;
+//            System.out.println("Level changed to " + currentLevel);
+            try {
+                cbLevel.setSelectedIndex(currentLevel - 1);
+            } catch (IllegalArgumentException e) {
+                battleField.gameWin();
+            }
         }
     }
 
@@ -162,15 +167,15 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
     }
 
     public static void main(String [] args) throws Exception {
-		PolygonWars win = new PolygonWars();
+        PolygonWars win = new PolygonWars();
 
-		win.setSize(WIDTH, HEIGHT);
+        win.setSize(WIDTH, HEIGHT);
         win.setTitle("Polygon Wars");
-		win.setVisible(true);
+        win.setVisible(true);
         win.setLocationRelativeTo(null);
         win.setResizable(false);
-		win.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	}
+        win.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
 }
 
 

@@ -9,6 +9,8 @@ class Ship extends Polygon
     private static final int WIDTH = 26, HEIGHT = 50;
 
     private boolean alive;
+
+    private boolean invincible;
     Point2D position = new Point2D.Double(0, 0);
     Color color = Color.WHITE;
 
@@ -26,6 +28,14 @@ class Ship extends Polygon
         int dy = destination.y - (int)position.getY();
         position = destination;
         translate(dx, dy);
+    }
+
+    public boolean isInvincible() {
+        return invincible;
+    }
+
+    public void setInvincible() {
+        this.invincible = true;
     }
 
     public boolean isAlive() {
