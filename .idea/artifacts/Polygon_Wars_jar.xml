@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Polygon Wars:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/Polygon_Wars_jar</output-path>
+    <root id="archive" name="Polygon Wars.jar">
+      <element id="module-output" name="Polygon Wars" />
+    </root>
+  </artifact>
+</component>

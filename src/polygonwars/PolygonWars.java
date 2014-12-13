@@ -1,3 +1,5 @@
+package polygonwars;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,11 +11,18 @@ import java.awt.image.BufferedImage;
 public class PolygonWars extends JFrame implements KeyListener, ActionListener {
     private static final int WIDTH = 800, HEIGHT = 600;
     private static final int MAX_LEVEL = 9;
-    private static int currentLevel=0;
-    private static int MAX_STARS =0;
+    private static final int LEVEL_SCORE_PT_REQ = 1000;
+    private static final Color LABEL_TEXT_COLOR = Color.RED;
+    private static final Color LABEL_BACKGROUND_COLOR = Color.GRAY;
+    private static final Font LABEL_FONT = new Font("Sans Serif", Font.BOLD, 16);
+
+    private static int currentLevel = 1;
+    private static int maxStars = 0;
+
     private BattleField battleField;
-    private JComboBox<String> cbLevel = new JComboBox<>();
+    private static JComboBox cbLevel = new JComboBox<>();
     private static JLabel scoreLbl = new JLabel(), starsLbl = new JLabel(), missilesLbl = new JLabel();
+    private static int score = 0;
 
     public PolygonWars() {
         Container contentPane = getContentPane();
@@ -24,6 +33,8 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
 
         cbLevel.setSelectedItem(0);
         cbLevel.addActionListener(this);
+        cbLevel.setFont(LABEL_FONT);
+        cbLevel.setForeground(LABEL_TEXT_COLOR);
 
         //  hud is input and output panel that contains: settings panel, missile panel and star panel
         JPanel hud = new JPanel();
@@ -31,39 +42,39 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         hud.setCursor(Cursor.getDefaultCursor());
         //  1. select level before game start; show level after game start
         JLabel levelLbl = new JLabel();
-        // TODO: update this text when level changes
-        levelLbl.setText("level goes here");
         JPanel levelPnl = new JPanel();
-        levelPnl.setBackground(Color.GRAY);
+        levelPnl.setBackground(LABEL_BACKGROUND_COLOR);
         levelPnl.add(cbLevel);
 //        levelPnl.add(levelLbl);
         levelPnl.setBorder(BorderFactory.createLineBorder(Color.black));
-        // TODO: remove combobox and replace with label once the game starts
 
         //  2. show missile supply
 
-        // TODO: update this label when missiles change
         // TODO: use a missile icon with text
-        missilesLbl.setText("Missile Status: Ready");
+        missilesLbl.setFont(LABEL_FONT);
+        missilesLbl.setForeground(LABEL_TEXT_COLOR);
+        updateMissiles(true);
         JPanel missilesPnl = new JPanel();
-        missilesPnl.setBackground(Color.GRAY);
+        missilesPnl.setBackground(LABEL_BACKGROUND_COLOR);
         missilesPnl.add(missilesLbl);
         missilesPnl.setBorder(BorderFactory.createLineBorder(Color.black));
 
         //  3. show stars remaining
         // TODO: update this label when stars change
         // TODO: use a star icon with text
-        starsLbl.setText("Stars: " + BattleField.getStar());
         JPanel starsPnl = new JPanel();
-        starsPnl.setBackground(Color.GRAY);
+        starsPnl.setBackground(LABEL_BACKGROUND_COLOR);
+        starsLbl.setFont(LABEL_FONT);
+        starsLbl.setForeground(LABEL_TEXT_COLOR);
         starsPnl.add(starsLbl);
         starsPnl.setBorder(BorderFactory.createLineBorder(Color.black));
 
         //  4. show score
-        // TODO: update this label when score changes
-        scoreLbl.setText("Score: " + BattleField.getScore());
+        updateScore(0);
         JPanel scorePnl = new JPanel();
-        scorePnl.setBackground(Color.GRAY);
+        scorePnl.setBackground(LABEL_BACKGROUND_COLOR);
+        scoreLbl.setFont(LABEL_FONT);
+        scoreLbl.setForeground(LABEL_TEXT_COLOR);
         scorePnl.add(scoreLbl);
         scorePnl.setBorder(BorderFactory.createLineBorder(Color.black));
 
@@ -101,18 +112,19 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         battleField.setLayout(new BorderLayout());
         battleField.add(statusLbl, BorderLayout.CENTER);
 
+        updateStars();
         this.addKeyListener(this);
     }
 
     public void actionPerformed(ActionEvent e) {
         cbLevel = (JComboBox)e.getSource();
-        currentLevel = cbLevel.getSelectedIndex();
-        MAX_STARS = currentLevel + 5;
-        System.out.println(MAX_STARS);
-            }
+        currentLevel = cbLevel.getSelectedIndex() + 1;
+        maxStars = currentLevel + 4;
+        System.out.println(maxStars + " " + cbLevel.getSelectedIndex());
+    }
 
     public static int getMaxStars() {
-        return MAX_STARS;
+        return maxStars;
     }
 
     // TODO: respond to key events to restart after game over
@@ -131,19 +143,23 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         System.out.println("key released");
     }
 
-
-    public static void updateScore() {
-        scoreLbl.setText("Score: " + BattleField.getScore());
+    public static void updateScore(int change) {
+        score += change;
+        scoreLbl.setText(String.format("Score: %09d", score));
+        if (score >= currentLevel * LEVEL_SCORE_PT_REQ) {
+            currentLevel = score/LEVEL_SCORE_PT_REQ + 1;
+            System.out.println("Level changed to " + currentLevel);
+            cbLevel.setSelectedIndex(currentLevel - 1);
+        }
     }
 
     public static void updateStars() {
-    starsLbl.setText("Stars: "+BattleField.getStar());
-}
-
-    public static void updateMissiles() {
-        missilesLbl.setText("Missile Status: "+BattleField.getReloading());
+        starsLbl.setText(String.format("Stars: %d/%d", BattleField.getStar(), currentLevel + 4));
     }
 
+    public static void updateMissiles(boolean state) {
+        missilesLbl.setText("Missiles: " + (state ? "Ready" : "Reloading"));
+    }
 
     public static void main(String [] args) throws Exception {
 		PolygonWars win = new PolygonWars();
