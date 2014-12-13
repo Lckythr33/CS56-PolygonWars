@@ -14,12 +14,11 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     private static final Color BACKGROUND_COLOR_DEAD = new Color(0xcc, 0x44, 0x44);
     private static final Color BACKGROUND_COLOR_WIN = new Color(0x44, 0xcc, 0x44);
     private static final int TIME_SLICE = 10;
-    private static final int MISSILE_LIMIT = 2;
+    private static final int MISSILE_LIMIT = 3;
 
     private static int starSpawnTimeout = 0;
     private static JLabel statusLbl;
     private static int starCount = 0;
-    private static String reloading = "";
     private int width, height;
 
     private PolygonWars parent;
@@ -70,7 +69,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
                             damagedStars.add(star);
                     }
                 }
-                if (xWing.intersects(star.getBounds2D())) {
+                if (!xWing.isInvincible() && xWing.intersects(star.getBounds2D())) {
                     gameOver();
                 }
             }
@@ -93,7 +92,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
             // remove the dead missiles and stars
             for (Missile missile : deadMissiles)
                 missiles.remove(missile);
-            PolygonWars.updateMissiles(missiles.size() <= MISSILE_LIMIT);
+            PolygonWars.updateMissiles(missiles.size() < MISSILE_LIMIT);
 
             for (Star star : deadStars)
                 stars.remove(star);
@@ -193,7 +192,8 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 //        System.out.println("missile #: " + missiles.size());
-        if (missiles.size() <= MISSILE_LIMIT && xWing.isAlive())
+        int limit = xWing.isInvincible() ? MISSILE_LIMIT * 2 : MISSILE_LIMIT;
+        if (missiles.size() < limit && xWing.isAlive())
             spawnMissile(e.getPoint());
     }
 

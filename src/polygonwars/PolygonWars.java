@@ -1,7 +1,6 @@
 package polygonwars;
 
 import javax.swing.*;
-import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +16,7 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
     private static final Color LABEL_BACKGROUND_COLOR = Color.GRAY;
     private static final Font LABEL_FONT = new Font("Sans Serif", Font.BOLD, 16);
 
-    private static AudioClip bgm;
+//    private static AudioInputStream bgm;
     private static int currentLevel = 1;
     private static int maxStars = 0;
 
@@ -116,6 +115,7 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
         updateScore(0);
 
         this.addKeyListener(this);
+
     }
 
    public void actionPerformed(ActionEvent e) {
@@ -168,6 +168,15 @@ public class PolygonWars extends JFrame implements KeyListener, ActionListener {
 
     public static void main(String [] args) throws Exception {
         PolygonWars win = new PolygonWars();
+
+        // TODO: get bgm to play
+/*
+        bgm = AudioSystem.getAudioInputStream(
+                PolygonWars.class.getResource("Somewhere In Time.wav"));
+        Clip clip = AudioSystem.getClip();
+        clip.open(bgm);
+        clip.start();
+*/
 
         win.setSize(WIDTH, HEIGHT);
         win.setTitle("Polygon Wars");
