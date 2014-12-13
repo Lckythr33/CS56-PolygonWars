@@ -17,7 +17,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
     private static final Color BACKGROUND_COLOR = new Color(0x00, 0x00, 0x88);
     private static final Color BACKGROUND_COLOR_DEAD = new Color(0xcc, 0x44, 0x44);
     private static final int TIME_SLICE = 10;
-    private static final int MISSILE_LIMIT = 2;
+    private static final int MISSILE_LIMIT = 4;
     private static int score=0;
     private static int starcount=0;
     private static String Reloading="";
@@ -33,6 +33,7 @@ class BattleField extends JPanel implements MouseMotionListener, MouseListener {
                 PolygonWars.updateStars();
                 starSpawnTimeout = 0;
             }
+
 
             // move stars
             for (Star star : stars) {
